@@ -50,7 +50,6 @@ export const Form = connect(null, { addFilm })(({ addFilm }) => {
       <div style={paperStyle}>
         <Grid align='center'>
           <h2>Create Film</h2>
-          <pre>{JSON.stringify({ ...formik.values, stars })}</pre>
         </Grid>
         <form onSubmit={formik.handleSubmit}>
           <TextField

@@ -1,4 +1,4 @@
-DEMO: https://dashboard.heroku.com/apps/films--list/deploy/heroku-git
+DEMO: https://films--list.herokuapp.com/
 
 
 ### `npm start`
