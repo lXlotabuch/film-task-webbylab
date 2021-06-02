@@ -1,0 +1,14 @@
+.star-wrapper {
+  display: 'flex';
+  flex-wrap: 'wrap';
+  padding: '10px 0';
+}
+
+.star-badge {
+  display: inline-block;
+  margin: 2px;
+  font-size: 12px;
+  background-color: lightblue;
+  border-radius: 20px;
+  padding: 2px 5px;
+}
