@@ -1,7 +1,7 @@
 // I'm sure it could have been made easier, but I came up with just that )))
 
 export const parseTxtFile = str => {
-  str = str
+  arrayFromStr = str
     .replace(/Release Year:/g, 'releaseYear:')
     .replace(/(?:\\[rn]|[\r\n]+)+/g, ' ')
     .split(' ')
@@ -12,7 +12,7 @@ export const parseTxtFile = str => {
   let key;
   let value = '';
 
-  str.forEach((el, i) => {
+  arrayFromStr.forEach((el, i) => {
     if (/([A-Z])\w+:/g.test(el)) {
       if (el !== 'releaseYear:') {
         el = el.slice(0, -1).toLowerCase();
@@ -40,7 +40,7 @@ export const parseTxtFile = str => {
       }
     } else {
       value += ` ${el}`;
-      if (i === str.length - 1) {
+      if (i === arrayFromStr.length - 1) {
         currentFilm[key] =
           key === 'stars' ? value.trim().split(', ') : value.trim();
 
