@@ -1,7 +1,7 @@
 // I'm sure it could have been made easier, but I came up with just that )))
 
 export const parseTxtFile = str => {
-  arrayFromStr = str
+  const arrayFromStr = str
     .replace(/Release Year:/g, 'releaseYear:')
     .replace(/(?:\\[rn]|[\r\n]+)+/g, ' ')
     .split(' ')
