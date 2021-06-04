@@ -71,9 +71,13 @@ export const deleteFilm = itemId => async dispatch => {
       body: JSON.stringify(itemId),
     });
     const data = await res.json();
-
-    dispatch(delFilm(itemId));
-    message.success(data.message);
+    
+    if (res.status === 200) {
+      dispatch(delFilm(itemId));
+      message.success(data.message);
+    } else {
+      message.warning("Something went wrong!");
+    }
     return data;
   } catch (err) {
     console.log(err);
