@@ -25,7 +25,6 @@ export const CardPage = connect(mapStateToProps, { getFilms })(
     useEffect(() => {
       getFilms();
     }, [getFilms]);
-    console.log(isLoading);
 
     if (isLoading) {
       return (

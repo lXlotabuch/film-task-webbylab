@@ -28,9 +28,14 @@ export const addFilm = film => async dispatch => {
     });
     const data = await res.json();
 
-    dispatch(addFilmAction(data));
-    dispatch(openCloseModal());
-    message.success(`Congratulation you add film: ${data.title}`);
+    if (res.status === 200) {
+      dispatch(addFilmAction(data));
+      dispatch(openCloseModal());
+      message.success(`Congratulation film ${data.title} add!`);
+    }
+    if (res.status === 201) {
+      message.warning(data.message);
+    }
   } catch (err) {
     console.log(err);
   }
@@ -46,11 +51,14 @@ export const addFilmFromFile = films => async dispatch => {
       });
       const data = await res.json();
 
-      dispatch(addFilmAction(data));
-      message.success(`Congratulation film ${data.title} add!`);
-    } catch (err) {
-      console.log(err);
-    }
+      if (res.status === 200) {
+        dispatch(addFilmAction(data));
+        message.success(`Congratulation film ${data.title} add!`);
+      }
+      if (res.status === 201) {
+        message.warning(data.message);
+      }
+    } catch (err) {}
   });
   dispatch(openCloseModal());
 };
@@ -65,7 +73,7 @@ export const deleteFilm = itemId => async dispatch => {
     const data = await res.json();
 
     dispatch(delFilm(itemId));
-    message.success(data.message, 30);
+    message.success(data.message);
     return data;
   } catch (err) {
     console.log(err);
