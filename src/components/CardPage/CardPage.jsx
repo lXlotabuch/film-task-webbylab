@@ -46,8 +46,8 @@ export const CardPage = connect(mapStateToProps, { getFilms })(
         direction='row'
         justify='center'
         alignItems='center'>
-        {films.map((film, i) => (
-          <CardFilm key={i} {...film} />
+        {films.map((film) => (
+          <CardFilm key={film.itemId} {...film} />
         ))}
       </Grid>
     );
