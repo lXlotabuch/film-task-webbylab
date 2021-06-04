@@ -1,9 +1,14 @@
 import {
   ADD_FILM,
+  ADD_FILM_FROM_FILE,
+  DEL_ERROR,
   DEL_FILM,
   OPEN_CLOSE_MODAL,
   SEARCH_FILMS,
+  SET_ERROR,
   SET_FILMS,
+  START_LOADING,
+  STOP_LOADING,
 } from '../action/action';
 
 const initialState = {
@@ -15,7 +20,7 @@ const initialState = {
 
 export const selectFilms = state => state.films.films;
 export const selectError = state => state.films.error;
-export const selectIsLigin = state => state.films.isLoading;
+export const selectIsLoading = state => state.films.isLoading;
 export const selectModalIsOpen = state => state.films.modalIsOpen;
 
 export const reducer = (state = initialState, { type, payload }) => {
@@ -29,10 +34,27 @@ export const reducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         films: [...state.films, payload].sort((a, b) => {
-          if (a.title > b.title) {
+          const aTitle = a.title.toLowerCase();
+          const bTitle = b.title.toLowerCase();
+          if (aTitle > bTitle) {
             return 1;
           }
-          if (a.title < b.title) {
+          if (aTitle < bTitle) {
+            return -1;
+          }
+          return 0;
+        }),
+      };
+    case ADD_FILM_FROM_FILE:
+      return {
+        ...state,
+        films: [...state.films, ...payload].sort((a, b) => {
+          const aTitle = a.title.toLowerCase();
+          const bTitle = b.title.toLowerCase();
+          if (aTitle > bTitle) {
+            return 1;
+          }
+          if (aTitle < bTitle) {
             return -1;
           }
           return 0;
@@ -52,6 +74,26 @@ export const reducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         modalIsOpen: !state.modalIsOpen,
+      };
+    case START_LOADING:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case STOP_LOADING:
+      return {
+        ...state,
+        isLoading: false,
+      };
+    case SET_ERROR:
+      return {
+        ...state,
+        error: payload,
+      };
+    case DEL_ERROR:
+      return {
+        ...state,
+        error: null,
       };
     default:
       return state;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -10,6 +10,8 @@ import { CreateFilmModal } from '../Modal/Modal';
 import { connect } from 'react-redux';
 import { selectModalIsOpen } from '../../store/reducer/reducer';
 import { openCloseModal } from '../../store/action/action';
+import { Form } from '../Form/Form';
+import { DownloadFile } from '../DownloadFile/DownloadFile';
 
 const mapStateToProps = state => ({
   modalIsOpen: selectModalIsOpen(state),
@@ -18,6 +20,12 @@ const mapStateToProps = state => ({
 export const Header = connect(mapStateToProps, { openCloseModal })(
   ({ modalIsOpen, openCloseModal }) => {
     const classes = useStyles();
+    const [modalChildren, setModalChildren] = useState(null);
+
+    const openModal = children => {
+      setModalChildren(children);
+      openCloseModal();
+    };
 
     return (
       <>
@@ -33,13 +41,20 @@ export const Header = connect(mapStateToProps, { openCloseModal })(
                 </div>
                 <HeaderSearch />
               </div>
-              <Button onClick={() => openCloseModal()} color='inherit'>
+              <Button
+                onClick={() => openModal(<DownloadFile />)}
+                color='inherit'>
+                Download films
+              </Button>
+              <Button onClick={() => openModal(<Form />)} color='inherit'>
                 Create Film
               </Button>
             </Toolbar>
           </AppBar>
         </header>
-        <CreateFilmModal open={modalIsOpen} onClose={openCloseModal} />
+        <CreateFilmModal open={modalIsOpen} onClose={openCloseModal}>
+          {modalChildren}
+        </CreateFilmModal>
       </>
     );
   },

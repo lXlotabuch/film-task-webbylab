@@ -1,8 +1,7 @@
 import { Modal } from '@material-ui/core';
-import { Form } from '../Form/Form';
 import { useStyles } from './ModalStyle';
 
-export const CreateFilmModal = ({ open, onClose }) => {
+export const CreateFilmModal = ({ open, onClose, children }) => {
   const classes = useStyles();
   return (
     <Modal
@@ -10,9 +9,7 @@ export const CreateFilmModal = ({ open, onClose }) => {
       onClose={() => onClose()}
       aria-labelledby='simple-modal-title'
       aria-describedby='simple-modal-description'>
-      <div className={classes.paper}>
-        <Form />
-      </div>
+      <div className={classes.paper}>{children}</div>
     </Modal>
   );
 };

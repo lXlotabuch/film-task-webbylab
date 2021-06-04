@@ -37,7 +37,7 @@ const useStyles = makeStyles({
 });
 
 export const CardFilm = connect(null, { deleteFilm })(
-  ({ itemId, title, releazeYear, format, stars, deleteFilm }) => {
+  ({ itemId, title, releaseYear, format, stars, deleteFilm }) => {
     const classes = useStyles();
 
     const handleClick = () => {
@@ -55,7 +55,7 @@ export const CardFilm = connect(null, { deleteFilm })(
               {title}
             </Typography>
             <Typography variant='h5' component='h2'>
-              {releazeYear}
+              {releaseYear}
             </Typography>
             <Typography className={classes.pos} color='textSecondary'>
               {format}

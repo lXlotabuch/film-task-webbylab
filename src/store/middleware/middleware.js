@@ -1,21 +1,25 @@
+import { message } from 'antd';
 import {
   setFilms,
   addFilmAction,
   delFilm,
   openCloseModal,
+  startLoading,
+  stopLoading,
 } from '../action/action';
 
 export const getFilms = () => async dispatch => {
+  dispatch(startLoading());
   try {
     const res = await fetch('/films');
     const data = await res.json();
 
     dispatch(setFilms(data));
   } catch (err) {}
+  dispatch(stopLoading());
 };
 
 export const addFilm = film => async dispatch => {
-  console.log(film);
   try {
     const res = await fetch('/films', {
       method: 'POST',
@@ -26,9 +30,29 @@ export const addFilm = film => async dispatch => {
 
     dispatch(addFilmAction(data));
     dispatch(openCloseModal());
+    message.success(`Congratulation you add film: ${data.title}`);
   } catch (err) {
     console.log(err);
   }
+};
+
+export const addFilmFromFile = films => async dispatch => {
+  films.forEach(async film => {
+    try {
+      const res = await fetch('/films', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(film),
+      });
+      const data = await res.json();
+
+      dispatch(addFilmAction(data));
+      message.success(`Congratulation film ${data.title} add!`);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  dispatch(openCloseModal());
 };
 
 export const deleteFilm = itemId => async dispatch => {
@@ -41,6 +65,8 @@ export const deleteFilm = itemId => async dispatch => {
     const data = await res.json();
 
     dispatch(delFilm(itemId));
+    message.success(data.message, 30);
+    return data;
   } catch (err) {
     console.log(err);
   }
