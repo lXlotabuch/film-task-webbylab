@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import { parseTxtFile } from '../../utils/parseTxtFile';
 import {
   setFilms,
   addFilmAction,
@@ -42,30 +43,38 @@ export const addFilm = film => async dispatch => {
   }
 };
 
-export const addFilmFromFile = films => async dispatch => {
+export const addFilmFromFile = file => async dispatch => {
   try {
-    const res = await fetch('/films/file', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ films }),
+    const reader = new FileReader();
+
+    reader.addEventListener('load', async event => {
+      const body = parseTxtFile(event.target.result);
+
+      const res = await fetch('/films/file', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ films: body }),
+      });
+      const data = await res.json();
+
+      if (res.status === 200) {
+        const addFilmTitle = data.add.map(el => el.title).join(',');
+        const existFilmTitle = data.exist.map(el => el.title).join(',');
+
+        if (data.add.length) {
+          dispatch(addFromFile(data.add));
+          message.success(`Congratulation films ${addFilmTitle} add!`, 2.4);
+        }
+
+        if (data.exist.length) {
+          message.warning(`Films ${existFilmTitle} already exist!`, 2.4);
+        }
+
+        dispatch(openCloseModal());
+      }
     });
-    const data = await res.json();
 
-    if (res.status === 200) {
-      const addFilmTitle = data.add.map(el => el.title).join(',');
-      const existFilmTitle = data.exist.map(el => el.title).join(',');
-
-      if (data.add.length) {
-        dispatch(addFromFile(data.add));
-        message.success(`Congratulation films ${addFilmTitle} add!`, 2.4);
-      }
-
-      if (data.exist.length) {
-        message.warning(`Films ${existFilmTitle} already exist!`, 2.4);
-      }
-
-      dispatch(openCloseModal());
-    }
+    reader.readAsText(file);
   } catch (err) {
     message.error(err);
   }

@@ -3,7 +3,6 @@ import { message } from 'antd';
 import { useRef } from 'react';
 import { connect } from 'react-redux';
 import { addFilmFromFile } from '../../store/middleware/middleware';
-import { parseTxtFile } from '../../utils/parseTxtFile';
 
 export const DownloadFile = connect(null, { addFilmFromFile })(
   ({ addFilmFromFile }) => {
@@ -20,14 +19,8 @@ export const DownloadFile = connect(null, { addFilmFromFile })(
         message.warning('Download file please!', 1.5);
         return;
       }
-      const reader = new FileReader();
-      reader.addEventListener('load', event => {
-        const currentFormat = parseTxtFile(event.target.result);
-        if (currentFormat) {
-          addFilmFromFile(currentFormat);
-        }
-      });
-      reader.readAsText(file);
+
+      addFilmFromFile(file);
     };
 
     return (
