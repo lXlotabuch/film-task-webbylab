@@ -51,8 +51,6 @@ export const addFilmFromFile = films => async dispatch => {
     });
     const data = await res.json();
 
-    console.log(data);
-
     if (res.status === 200) {
       const addFilmTitle = data.add.map(el => el.title).join(',');
       const existFilmTitle = data.exist.map(el => el.title).join(',');

@@ -17,15 +17,16 @@ export const parseTxtFile = str => {
       const currentKey = key === 'releaseYear' ? key : key.toLowerCase();
 
       if (i + 1 === films.length) {
-        currentFilm[currentKey] = currentKey === 'stars' ? value : value.trim();
+        currentFilm[currentKey] = value;
       }
 
       if (currentFilm[currentKey]) {
+        currentFilm.stars = currentFilm.stars.split(', ');
         result.push(currentFilm);
         currentFilm = {};
-        currentFilm[currentKey] = currentKey === 'stars' ? value : value.trim();
+        currentFilm[currentKey] = value;
       } else {
-        currentFilm[currentKey] = currentKey === 'stars' ? value : value.trim();
+        currentFilm[currentKey] = value;
       }
     });
 
