@@ -11,7 +11,7 @@ export const DownloadFile = connect(null, { addFilmFromFile })(
 
     const handleClick = () => {
       const file = fileInput.current.files[0];
-      const type = file.type.split('/')[0];
+      const type = file?.type.split('/')[0];
       if (type !== 'text') {
         message.warning('Only TEXT file');
         return;
@@ -23,7 +23,9 @@ export const DownloadFile = connect(null, { addFilmFromFile })(
       const reader = new FileReader();
       reader.addEventListener('load', event => {
         const currentFormat = parseTxtFile(event.target.result);
-        addFilmFromFile(currentFormat);
+        if (currentFormat) {
+          addFilmFromFile(currentFormat);
+        }
       });
       reader.readAsText(file);
     };

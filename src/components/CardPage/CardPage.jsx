@@ -1,18 +1,14 @@
 import React, { useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
-import { CardFilm } from '../Card/CardFilm';
-import { selectFilms, selectIsLoading } from '../../store/reducer/reducer';
-import { connect } from 'react-redux';
-import { getFilms } from '../../store/middleware/middleware';
-import { NoFilms } from '../NoFilms/NoFilms';
-import { Backdrop, CircularProgress, makeStyles } from '@material-ui/core';
+import { Backdrop, CircularProgress } from '@material-ui/core';
+import { useStyles } from './materialStyle';
 
-const useStyles = makeStyles(theme => ({
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: '#fff',
-  },
-}));
+import { connect } from 'react-redux';
+import { selectFilms, selectIsLoading } from '../../store/reducer/reducer';
+import { getFilms } from '../../store/middleware/middleware';
+
+import { FilmCard } from '../FilmCard/FilmCard';
+import { NoFilms } from '../NoFilms/NoFilms';
 
 const mapStateToProps = state => ({
   films: selectFilms(state),
@@ -46,8 +42,8 @@ export const CardPage = connect(mapStateToProps, { getFilms })(
         direction='row'
         justify='center'
         alignItems='center'>
-        {films.map((film) => (
-          <CardFilm key={film.itemId} {...film} />
+        {films.map(film => (
+          <FilmCard key={film.itemId} {...film} />
         ))}
       </Grid>
     );

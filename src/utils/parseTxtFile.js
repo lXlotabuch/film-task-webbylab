@@ -1,52 +1,36 @@
 // I'm sure it could have been made easier, but I came up with just that )))
 
+import { message } from 'antd';
+
 export const parseTxtFile = str => {
-  const arrayFromStr = str
-    .replace(/Release Year:/g, 'releaseYear:')
-    .replace(/(?:\\[rn]|[\r\n]+)+/g, ' ')
-    .split(' ')
-    .filter(Boolean);
+  try {
+    const films = str
+      .replace(/Release Year:/g, 'releaseYear:')
+      .split(/(?:\r\n)/g)
+      .filter(Boolean);
 
-  const result = [];
-  let currentFilm = {};
-  let key;
-  let value = '';
+    const result = [];
+    let currentFilm = {};
 
-  arrayFromStr.forEach((el, i) => {
-    if (/([A-Z])\w+:/g.test(el)) {
-      if (el !== 'releaseYear:') {
-        el = el.slice(0, -1).toLowerCase();
-      } else el = el.slice(0, -1);
+    films.forEach((film, i) => {
+      const [key, value] = film.split(': ');
+      const currentKey = key === 'releaseYear' ? key : key.toLowerCase();
 
-      if (key) {
-        if (currentFilm[el]) {
-          currentFilm[key] =
-            key === 'stars' ? value.trim().split(', ') : value.trim();
-
-          result.push(currentFilm);
-
-          currentFilm = {};
-          value = '';
-          key = el;
-        } else {
-          currentFilm[key] =
-            key === 'stars' ? value.trim().split(', ') : value.trim();
-
-          key = el;
-          value = '';
-        }
-      } else {
-        key = el;
+      if (i + 1 === films.length) {
+        currentFilm[currentKey] = currentKey === 'stars' ? value : value.trim();
       }
-    } else {
-      value += ` ${el}`;
-      if (i === arrayFromStr.length - 1) {
-        currentFilm[key] =
-          key === 'stars' ? value.trim().split(', ') : value.trim();
 
+      if (currentFilm[currentKey]) {
         result.push(currentFilm);
+        currentFilm = {};
+        currentFilm[currentKey] = currentKey === 'stars' ? value : value.trim();
+      } else {
+        currentFilm[currentKey] = currentKey === 'stars' ? value : value.trim();
       }
-    }
-  });
-  return result;
+    });
+
+    return result;
+  } catch (err) {
+    message.error('Some error');
+  }
 };

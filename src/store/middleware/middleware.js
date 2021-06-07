@@ -6,6 +6,7 @@ import {
   openCloseModal,
   startLoading,
   stopLoading,
+  addFromFile,
 } from '../action/action';
 
 export const getFilms = () => async dispatch => {
@@ -42,25 +43,34 @@ export const addFilm = film => async dispatch => {
 };
 
 export const addFilmFromFile = films => async dispatch => {
-  films.forEach(async film => {
-    try {
-      const res = await fetch('/films', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(film),
-      });
-      const data = await res.json();
+  try {
+    const res = await fetch('/films/file', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ films }),
+    });
+    const data = await res.json();
 
-      if (res.status === 200) {
-        dispatch(addFilmAction(data));
-        message.success(`Congratulation film ${data.title} add!`);
+    console.log(data);
+
+    if (res.status === 200) {
+      const addFilmTitle = data.add.map(el => el.title).join(',');
+      const existFilmTitle = data.exist.map(el => el.title).join(',');
+
+      if (data.add.length) {
+        dispatch(addFromFile(data.add));
+        message.success(`Congratulation films ${addFilmTitle} add!`, 2.4);
       }
-      if (res.status === 201) {
-        message.warning(data.message);
+
+      if (data.exist.length) {
+        message.warning(`Films ${existFilmTitle} already exist!`, 2.4);
       }
-    } catch (err) {}
-  });
-  dispatch(openCloseModal());
+
+      dispatch(openCloseModal());
+    }
+  } catch (err) {
+    message.error(err);
+  }
 };
 
 export const deleteFilm = itemId => async dispatch => {
@@ -71,12 +81,12 @@ export const deleteFilm = itemId => async dispatch => {
       body: JSON.stringify(itemId),
     });
     const data = await res.json();
-    
+
     if (res.status === 200) {
       dispatch(delFilm(itemId));
       message.success(data.message);
     } else {
-      message.warning("Something went wrong!");
+      message.warning('Something went wrong!');
     }
     return data;
   } catch (err) {
