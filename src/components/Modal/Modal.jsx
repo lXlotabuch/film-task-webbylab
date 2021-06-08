@@ -1,7 +1,7 @@
 import { Modal } from '@material-ui/core';
 import { useStyles } from './ModalStyle';
 
-export const CreateFilmModal = ({ open, onClose, children }) => {
+export const ModalWrapper = ({ open, onClose, children }) => {
   const classes = useStyles();
   return (
     <Modal
